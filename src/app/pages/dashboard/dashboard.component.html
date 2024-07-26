@@ -1,0 +1,178 @@
+<form (ngSubmit)="buscar()">
+  <div class="card" style="border-bottom: 1px solid #3498db;">
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="d-flex align-items-center">
+          <label class="form-label mb-0 mr-2">Del</label>
+          <input type="date" class="form-control form-control-sm mr-2 w-30" id="fechaInicial" name="fechaInicial" required (change)="syncDates()">
+          <label class="form-label mb-0 mr-2">al</label>
+          <input type="date" class="form-control form-control-sm mr-2" id="fechaFinal" name="fechaFinal" required>
+          <label for="clienteSelect" class="form-label mb-0 mr-2">Cliente:</label>
+          <select class="form-control form-control-sm mr-3" id="clienteSelect" name="clienteSelect" required
+                  (click)="onSelectClick()" [(ngModel)]="selectedOption">
+            <option value="-1" selected>- Seleccione -</option>
+            <option *ngFor="let option of options" [value]="option.value">{{ option.text }}</option>
+          </select>
+          <label class="form-label mb-0 mr-2">Tipo:</label>
+          <div class="form-check form-check-inline mb-0 mr-2">
+            <input class="form-check-input" type="radio" name="tipo" id="nacional" value="N">
+            <label class="form-check-label" for="nacional">Nacional</label>
+          </div>
+          <div class="form-check form-check-inline mb-0 mr-2">
+            <input class="form-check-input" type="radio" name="tipo" id="internacional" value="I">
+            <label class="form-check-label" for="internacional">Internacional</label>
+          </div>
+          <div class="form-check form-check-inline mb-0 mr-3">
+            <input class="form-check-input" type="radio" name="tipo" id="ambos" value="T">
+            <label class="form-check-label" for="ambos">Ambos</label>
+          </div>
+          <button class="btn btn-primary btn-sm" type="submit" id="busqueda" name="busqueda">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p classs="textoPaginacion" style="color: #3498db;margin-left:30px;font-weight: 700;">BUSCANDO BOLETOS</p>
+  </div>
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="page-size-selector mt-2" *ngIf="getTotalPages() > 0">
+        <label>Mostrar:</label>
+        <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" id="itemsPerPage" name="itemsPerPage" class="selectorPaginado ms-2 me-2">
+          <option value="20">20</option>
+          <option value="40">40</option>
+          <option value="60">60</option>
+        </select>
+        registros por página 
+      </div>
+    </div>
+    <div class="col-lg-4" *ngIf="getTotalPages() > 0">
+      <div class="row mt-2">
+        <div class="col">
+          <label for="searchText" class="form-label mb-0 me-2">Buscar pasajero: </label>
+          <input type="text" class="form-control form-control-sm vw-100" id="searchText" name="searchText" [(ngModel)]="searchText" (input)="filterRows()">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 mt-2">
+      <div class="d-flex justify-content-end mb-2">
+        <button class="btn btn-danger btn-sm mr-2" (click)="exportToPDF()" hidden [disabled]="!isAnyCheckboxSelected" id="btnPDF" nMW="btnPDF">
+          <i class="fa fa-file-pdf-o"></i> DESCARGAR PDF
+        </button>        
+        <button class="btn btn-success btn-sm" (click)="exportToExcel()" hidden id="btnExcel" name="btnExcel">
+          <i class="fa fa-table"></i> CREAR EXCEL</button>
+      </div>
+    </div>
+    <div class="col-lg-3 text-right page-size-selector mt-1" *ngIf="getTotalPages() > 0">
+      <small class="peque">MONTO TOTAL: <strong>{{ calcularSumatoriaTotal().toFixed(2) }}</strong></small><br>
+      <strong class="textoPaginacion">{{ rows.length }}</strong> boletos encontrados.
+    </div>    
+  </div>
+  <div class="row mt-1">
+    <div class="col">
+      <div *ngIf="!isLoading">
+        <table class="table table-sm table-striped">
+          <thead class="table-info">
+            <tr>
+              <th scope="col">
+                <input type="checkbox" (change)="toggleAllSelection($event)" id="toggleAllSelection" name="toggleAllSelection">
+                <span class="resize-handle" data-column="toggleAllSelection" (mousedown)="onResizeStart($event, 'toggleAllSelection')"></span>
+              </th>
+              <th scope="col">
+                PDF
+                <span class="resize-handle" data-column="PDF" (mousedown)="onResizeStart($event, 'PDF')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('L. Aérea')">Línea Aérea <i [ngClass]="getSortIcon('L. Aérea')"></i></a>
+                <span class="resize-handle" data-column="L. Aérea" (mousedown)="onResizeStart($event, 'L. Aérea')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Fec. Emisión')">Fec.Emisión <i [ngClass]="getSortIcon('Fec. Emisión')"></i></a>
+                <span class="resize-handle" data-column="Fec. Emisión" (mousedown)="onResizeStart($event, 'Fec. Emisión')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Tarifa')">Tarifa <i [ngClass]="getSortIcon('Tarifa')"></i></a>
+                <span class="resize-handle" data-column="Tarifa" (mousedown)="onResizeStart($event, 'Tarifa')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('IGV')">IGV <i [ngClass]="getSortIcon('IGV')"></i></a>
+                <span class="resize-handle" data-column="IGV" (mousedown)="onResizeStart($event, 'IGV')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Impuesto')">Imp. <i [ngClass]="getSortIcon('Impuesto')"></i></a>
+                <span class="resize-handle" data-column="Impuesto" (mousedown)="onResizeStart($event, 'Impuesto')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Total')">Total <i [ngClass]="getSortIcon('Total')"></i></a>
+                <span class="resize-handle" data-column="Total" (mousedown)="onResizeStart($event, 'Total')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Nombre Apellidos')">Nombre <i [ngClass]="getSortIcon('Nombre Apellidos')"></i></a>
+                <span class="resize-handle" data-column="Nombre Apellidos" (mousedown)="onResizeStart($event, 'Nombre Apellidos')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('co_iata')">Cód. <i [ngClass]="getSortIcon('co_iata')"></i></a>
+                <span class="resize-handle" data-column="co_iata" (mousedown)="onResizeStart($event, 'co_iata')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('RUC L. Aérea')">RUC L. A. <i [ngClass]="getSortIcon('RUC L. Aérea')"></i></a>
+                <span class="resize-handle" data-column="RUC L. Aérea" (mousedown)="onResizeStart($event, 'RUC L. Aérea')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Ruta')">Ruta <i [ngClass]="getSortIcon('Ruta')"></i></a>
+                <span class="resize-handle" data-column="Ruta" (mousedown)="onResizeStart($event, 'Ruta')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('Tipo Ruta')">Tipo <i [ngClass]="getSortIcon('Tipo Ruta')"></i></a>
+                <span class="resize-handle" data-column="Tipo Ruta" (mousedown)="onResizeStart($event, 'Tipo Ruta')"></span>
+              </th>
+              <th scope="col">
+                <a (click)="sortTable('co_area')">Área <i [ngClass]="getSortIcon('co_area')"></i></a>
+                <span class="resize-handle" data-column="co_area" (mousedown)="onResizeStart($event, 'co_area')"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of pagedRows">
+              <td>
+                <input type="checkbox" [(ngModel)]="row.selected" name="selected-{{row.id}}" (change)="onCheckboxChange()">
+              </td>
+              <td>
+                <i class="fa fa-file-pdf-o text-danger" style="cursor: pointer;" (click)="fetchAndShowPDF(row)"></i>
+              </td>            
+              <td>{{ getProperty(row, 'L. Aérea') }}</td>
+              <td>{{ convertirFechas(getProperty(row, 'Fec. Emisión')) }}</td>
+              <td class="text-right">{{ getProperty(row, 'Tarifa').toFixed(2) }}</td>
+              <td class="text-right">{{ getProperty(row, 'IGV').toFixed(2) }}</td>
+              <td class="text-right">{{ getProperty(row, 'Impuesto').toFixed(2) }}</td>
+              <td class="text-right">{{ getProperty(row, 'Total').toFixed(2) }}</td>
+              <td>{{ getProperty(row, 'Nombre Apellidos') }}</td>
+              <td>{{ getProperty(row, 'co_iata') }}</td>
+              <td>{{ getProperty(row, 'RUC L. Aérea') }}</td>
+              <td>{{ getProperty(row, 'Ruta') }}</td>
+              <td>{{ getProperty(row, 'Tipo Ruta') }}</td>
+              <td>{{ row.co_area }}</td>
+            </tr>
+          </tbody>
+        </table>        
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="getTotalPages() > 1">
+    <button class="pagination-button me-2" (click)="goToFirstPage()" *ngIf="!isFirstPage()">
+      <i class="fa fa-angle-double-left"></i>
+    </button>
+    <button class="pagination-button me-2" (click)="goToPreviousPage()" *ngIf="!isFirstPage()">
+      <i class="fa fa-angle-left"></i>
+    </button>
+    <span>Página {{ currentPage }} de {{ getTotalPages() }}</span>
+    <button class="pagination-button ms-2" (click)="goToNextPage()" *ngIf="!isLastPage()">
+      <i class="fa fa-angle-right"></i>
+    </button>
+    <button class="pagination-button ms-2" (click)="goToLastPage()" *ngIf="!isLastPage()">
+      <i class="fa fa-angle-double-right"></i>
+    </button>
+  </div>
+</form>

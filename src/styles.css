@@ -1,0 +1,16 @@
+
+.fast{
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-fill-mode:both;
+    animation-fill-mode:both
+}
+
+#themecolors .selector {
+    cursor: pointer;
+}
+
+.img-avatar{
+    height: 200px;
+    width: 200px;
+}

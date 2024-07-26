@@ -1,0 +1,171 @@
+<form (submit)="buscar()">
+    <div class="card" style="border-bottom: 1px solid #3498db;">
+        <div class="row mt-3">
+          <div class="col-12">
+            <div class="d-flex align-items-center">
+              <label for="clienteSelect" class="form-label mb-0 mr-2">Cliente:</label>
+              <select class="form-control form-control-sm mr-3 cliente-select" id="clienteSelect" name="clienteSelect" required
+                      (click)="onSelectClick()" [(ngModel)]="selectedOption">
+                <option value="-1">- Seleccione -</option>
+                <option *ngFor="let option of options" [value]="option.value">{{ option.text }}</option>
+              </select>
+
+              <label class="form-label mb-0 mr-2">Del</label>
+              <input type="date" class="form-control form-control-sm mr-2" id="fechaInicial" name="fechaInicial" required (change)="syncDates()">
+
+              <label class="form-label mb-0 mr-2">al</label>
+              <input type="date" class="form-control form-control-sm mr-2" id="fechaFinal" name="fechaFinal" required>
+
+              <label class="form-label mb-0 mr-2">File:</label>
+              <input type="text" class="form-control form-control-sm mr-2 short-input" id="nu_file" name="nu_file">
+
+              <label class="form-label mb-0 mr-2">Tipo:</label>
+              <select class="form-control form-control-sm mr-3 short-input" id="co_tip_doc" name="co_tip_doc"
+                  (click)="onSelectTipoClick()" [(ngModel)]="selectedTipo" (change)="onTipoChange($event)">
+                <option value="-1" selected>[-]</option>
+                <option *ngFor="let tipo of tipos" [value]="tipo.value">{{ tipo.text }}</option>
+              </select>
+
+              <label class="form-label mb-0 mr-2">Serie:</label>
+              <select class="form-control form-control-sm mr-3 short-input" id="nu_serie" name="nu_serie" [(ngModel)]="selectedSerie">
+                <option value="" selected>[-]</option>
+                <option *ngFor="let serie of series" [value]="serie.value">{{ serie.text }}</option>
+              </select>
+
+              <label class="form-label mb-0 mr-2">Doc:</label>
+              <input type="text" class="form-control form-control-sm mr-2 medium-input" id="nu_docu" name="nu_docu">
+
+              <button class="btn btn-primary btn-sm" type="submit">Buscar</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p classs="textoPaginacion" style="color: #3498db;margin-left:30px;font-weight: 700;">BUSCANDO BOLETOS</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="page-size-selector mt-2" *ngIf="getTotalPages() > 0">
+            <label>Mostrar:</label>
+            <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" id="itemsPerPage" name="itemsPerPage" class="selectorPaginado ms-2 me-2">
+              <option value="20">20</option>
+              <option value="40">40</option>
+              <option value="60">60</option>
+            </select>
+            registros por página 
+          </div>
+        </div>
+        <div class="col-lg-4" *ngIf="getTotalPages() > 0">
+          <div class="row mt-2">
+            <div class="col">
+              <label for="searchText" class="form-label mb-0 me-2">Buscar Doc. / File: </label>
+              <input type="text" class="form-control form-control-sm ml-2" id="searchText" name="searchText" [(ngModel)]="searchText" (input)="filterRows()">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 mt-2">
+          <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-danger btn-sm mr-2" (click)="exportToPDF()" hidden [disabled]="!isAnyCheckboxSelected" id="btnPDF" name="btnPDF">
+              <i class="fa fa-file-pdf-o"></i> DESCARGAR PDF
+            </button>        
+            <button class="btn btn-success btn-sm" (click)="exportToExcel()" hidden id="btnExcel" name="btnExcel">
+              <i class="fa fa-table"></i> CREAR EXCEL</button>
+          </div>
+        </div>
+        <div class="col-lg-3 text-right page-size-selector mt-1"  *ngIf="getTotalPages() > 0">
+          <small class="peque">MONTO TOTAL: <strong>{{ calcularSumatoriaTotal().toFixed(2) }}</strong></small><br>
+          <strong class="textoPaginacion">{{ this.rows.length }}</strong> boletos encontrados.
+        </div>
+      </div>
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table table-sm table-striped">
+                <thead class="table-info">
+                    <tr>
+                        <th scope="col">
+                            <input type="checkbox" (change)="toggleAllSelection($event)" name="toggleAllSelection" id=""toggleAllSelection>
+                            <span class="resize-handle" data-column="toggleAllSelection" (mousedown)="onResizeStart($event, 'toggleAllSelection')"></span>
+                        </th>
+                        <th scope="col">
+                          PDF
+                          <span class="resize-handle" data-column="PDF" (mousedown)="onResizeStart($event, 'PDF')"></span>
+                        </th> 
+                        <th scope="col">
+                          <a (click)="sortTable('Tipo')">Tipo <i [ngClass]="getSortIcon('Tipo')"></i></a>
+                          <span class="resize-handle" data-column="Tipo" (mousedown)="onResizeStart($event, 'Tipo')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('Serie')">Serie <i [ngClass]="getSortIcon('Serie')"></i></a>
+                          <span class="resize-handle" data-column="Serie" (mousedown)="onResizeStart($event, 'Serie')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('Número')">Número <i [ngClass]="getSortIcon('Número')"></i></a>
+                          <span class="resize-handle" data-column="Número" (mousedown)="onResizeStart($event, 'Número')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('Fecha')">Fecha <i [ngClass]="getSortIcon('Fecha')"></i></a>
+                          <span class="resize-handle" data-column="Fecha" (mousedown)="onResizeStart($event, 'Fecha')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('Razón Social')">Razón Social <i [ngClass]="getSortIcon('Razón Social')"></i></a>
+                          <span class="resize-handle" data-column="Razón Social" (mousedown)="onResizeStart($event, 'Razón Social')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('File')">File <i [ngClass]="getSortIcon('File')"></i></a>
+                          <span class="resize-handle" data-column="File" (mousedown)="onResizeStart($event, 'File')"></span>
+                        </th> 
+                        <th scope="col">
+                          <a (click)="sortTable('Moneda')">Moneda <i [ngClass]="getSortIcon('Moneda')"></i></a>
+                          <span class="resize-handle" data-column="Moneda" (mousedown)="onResizeStart($event, 'Moneda')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('Total')">Total <i [ngClass]="getSortIcon('Total')"></i></a>
+                          <span class="resize-handle" data-column="Total" (mousedown)="onResizeStart($event, 'Total')"></span>
+                        </th>
+                        <th scope="col">
+                          <a (click)="sortTable('Glosa')">Glosa <i [ngClass]="getSortIcon('Glosa')"></i></a>
+                          <span class="resize-handle" data-column="Glosa" (mousedown)="onResizeStart($event, 'Glosa')"></span>
+                        </th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of pagedRows">
+                        <td>
+                            <input type="checkbox" [(ngModel)]="row.selected" name="rowSelected" id="rowSelected" (change)="onCheckboxChange()">
+                        </td>
+                        <td>
+                            <i class="fa fa-file-pdf-o text-danger" style="cursor: pointer;" (click)="fetchAndShowPDF(row)"></i>
+                        </td>
+                        <td class="text-center">{{ getProperty(row, 'Tipo') }}</td>
+                        <td class="text-center">{{ getProperty(row, 'Serie') }}</td>
+                        <td class="text-center">{{ getProperty(row, 'Número') }}</td>
+                        <td class="text-center">{{ convertirFechas(getProperty(row, 'Fecha')) }}</td>
+                        <td>{{ getProperty(row, 'Razón Social') }}</td>
+                        <td class="text-center">{{ getProperty(row, 'File') }}</td>
+                        <td class="text-center">{{ getProperty(row, 'Moneda') }}</td>
+                        <td class="text-right">{{ getProperty(row, 'Total').toFixed(2) }}</td>
+                        <td>{{ getProperty(row, 'Glosa') }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="pagination" *ngIf="getTotalPages() > 1">
+        <button class="pagination-button me-2" (click)="goToFirstPage()" *ngIf="!isFirstPage()">
+          <i class="fa fa-angle-double-left"></i>
+        </button>
+        <button class="pagination-button me-2" (click)="goToPreviousPage()" *ngIf="!isFirstPage()">
+          <i class="fa fa-angle-left"></i>
+        </button>
+        <span>Página {{ currentPage }} de {{ getTotalPages() }}</span>
+        <button class="pagination-button ms-2" (click)="goToNextPage()" *ngIf="!isLastPage()">
+          <i class="fa fa-angle-right"></i>
+        </button>
+        <button class="pagination-button ms-2" (click)="goToLastPage()" *ngIf="!isLastPage()">
+          <i class="fa fa-angle-double-right"></i>
+        </button>
+    </div>
+</form>
