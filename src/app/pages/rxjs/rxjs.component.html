@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div *ngIf="isLoading" class="loading-overlay">
+    <div *ngIf="isLoading" class="loading-overlay rounded-bottom">
         <div class="spinner"></div>
         <p classs="textoPaginacion" style="color: #3498db;margin-left:30px;font-weight: 700;">BUSCANDO BOLETOS</p>
       </div>
@@ -54,7 +54,7 @@
               <option value="40">40</option>
               <option value="60">60</option>
             </select>
-            registros por página 
+            registros
           </div>
         </div>
         <div class="col-lg-4" *ngIf="getTotalPages() > 0">
@@ -74,9 +74,8 @@
               <i class="fa fa-table"></i> CREAR EXCEL</button>
           </div>
         </div>
-        <div class="col-lg-3 text-right page-size-selector mt-1"  *ngIf="getTotalPages() > 0">
-          <small class="peque">MONTO TOTAL: <strong>{{ calcularSumatoriaTotal().toFixed(2) }}</strong></small><br>
-          <strong class="textoPaginacion">{{ this.rows.length }}</strong> boletos encontrados.
+        <div class="col-lg-3 text-right page-size-selector mt-2"  *ngIf="getTotalPages() > 0">
+          <small class="peque">TOTAL: <strong>{{ calcularSumatoriaTotal().toFixed(2) }}</strong></small> / <strong class="textoPaginacion">{{ this.rows.length }}</strong> boletos.
         </div>
       </div>
     <div class="row mt-3">
@@ -131,6 +130,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr *ngIf="noRecordsFound">
+                      <td colspan="14" class="text-center">
+                        <div class="alert alert-warning" role="alert">
+                          No se han encontrado registros en la búsqueda solicitada.
+                        </div>
+                      </td>
+                    </tr>
                     <tr *ngFor="let row of pagedRows">
                         <td>
                             <input type="checkbox" [(ngModel)]="row.selected" name="rowSelected" id="rowSelected" (change)="onCheckboxChange()">

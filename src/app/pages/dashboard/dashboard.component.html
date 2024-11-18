@@ -44,7 +44,7 @@
           <option value="40">40</option>
           <option value="60">60</option>
         </select>
-        registros por página 
+        registros
       </div>
     </div>
     <div class="col-lg-4" *ngIf="getTotalPages() > 0">
@@ -112,8 +112,8 @@
                 <span class="resize-handle" data-column="Nombre Apellidos" (mousedown)="onResizeStart($event, 'Nombre Apellidos')"></span>
               </th>
               <th scope="col">
-                <a (click)="sortTable('co_iata')">Cód. <i [ngClass]="getSortIcon('co_iata')"></i></a>
-                <span class="resize-handle" data-column="co_iata" (mousedown)="onResizeStart($event, 'co_iata')"></span>
+                <a (click)="sortTable('Boleto')">Boleto <i [ngClass]="getSortIcon('Boleto')"></i></a>
+                <span class="resize-handle" data-column="Boleto" (mousedown)="onResizeStart($event, 'Boleto')"></span>
               </th>
               <th scope="col">
                 <a (click)="sortTable('RUC L. Aérea')">RUC L. A. <i [ngClass]="getSortIcon('RUC L. Aérea')"></i></a>
@@ -133,28 +133,37 @@
               </th>
             </tr>
           </thead>
+          
           <tbody>
+            <tr *ngIf="noRecordsFound">
+              <td colspan="14" class="text-center">
+                <div class="alert alert-warning" role="alert">
+                  No se han encontrado registros en la búsqueda solicitada.
+                </div>
+              </td>
+            </tr>
             <tr *ngFor="let row of pagedRows">
               <td>
                 <input type="checkbox" [(ngModel)]="row.selected" name="selected-{{row.id}}" (change)="onCheckboxChange()">
               </td>
               <td>
                 <i class="fa fa-file-pdf-o text-danger" style="cursor: pointer;" (click)="fetchAndShowPDF(row)"></i>
-              </td>            
+              </td>
               <td>{{ getProperty(row, 'L. Aérea') }}</td>
-              <td>{{ convertirFechas(getProperty(row, 'Fec. Emisión')) }}</td>
+              <td>{{ convertirFechas1(getProperty(row, 'Fec. Emisión')) }}</td>
               <td class="text-right">{{ getProperty(row, 'Tarifa').toFixed(2) }}</td>
               <td class="text-right">{{ getProperty(row, 'IGV').toFixed(2) }}</td>
               <td class="text-right">{{ getProperty(row, 'Impuesto').toFixed(2) }}</td>
               <td class="text-right">{{ getProperty(row, 'Total').toFixed(2) }}</td>
               <td>{{ getProperty(row, 'Nombre Apellidos') }}</td>
-              <td>{{ getProperty(row, 'co_iata') }}</td>
+              <td>{{ getProperty(row, 'Número Boleto') }}</td>
               <td>{{ getProperty(row, 'RUC L. Aérea') }}</td>
               <td>{{ getProperty(row, 'Ruta') }}</td>
               <td>{{ getProperty(row, 'Tipo Ruta') }}</td>
               <td>{{ row.co_area }}</td>
             </tr>
           </tbody>
+          
         </table>        
       </div>
     </div>

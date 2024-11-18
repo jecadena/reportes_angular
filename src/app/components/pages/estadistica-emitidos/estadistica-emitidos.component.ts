@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { DocumentoService } from '../../services/documento.service';
-import { PdfUploadService } from '../../services/pdf-upload.service';
-import { UsuarioService } from '../../services/usuario.service';
-import { Usuario } from '../../pages/usuarios/usuario';
+import { DocumentoService } from '../../../services/documento.service';
+import { PdfUploadService } from '../../../services/pdf-upload.service';
+import { UsuarioService } from '../../../services/usuario.service';
+import { Usuario } from '../../../pages/usuarios/usuario';
 import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx';
 import * as ExcelJS from 'exceljs';
@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 import 'jspdf-autotable';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { Pipe, PipeTransform } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
@@ -43,16 +43,18 @@ interface Documento {
 }
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-estadistica-emitidos',
+  templateUrl: './estadistica-emitidos.component.html',
+  styleUrls: ['./estadistica-emitidos.component.scss']
 })
 
-export class DashboardComponent implements OnInit {
+export class EstadisticaEmitidosComponent implements OnInit {
   public http_url_img: string;
   public selectedOption: any;
   noRecordsFound: boolean = false;
-
+  hotelesUnicos: string[] = [];
+  isHotelSelected: boolean = false;
+  hotelSeleccionado: string = '';
   isLoading: boolean = false;
   isSearching: boolean = false;
   options: Array<{ value: string, text: string }> = [];
@@ -64,15 +66,15 @@ export class DashboardComponent implements OnInit {
   sortColumn: string | null = null;
   sortDirection: 'asc' | 'desc' = 'asc';
   columns = [
-    { name: 'L. Aérea' },
-    { name: 'Fec. Emisión' },
-    { name: 'Tarifa' },
-    { name: 'IGV' },
-    { name: 'Impuestos' },
+    { name: 'Solicitud' },
+    { name: 'Número' },
+    { name: 'Fecha de Ingreso' },
+    { name: 'Fecha de Salida' },
+    { name: 'Fecha de la factura' },
     { name: 'Total' },
-    { name: 'Apellidos' },
-    { name: 'Nombre' },
-    { name: 'Cód.' },
+    { name: 'Hotel' },
+    { name: 'Operador' },
+    { name: 'Pasajero' },
     { name: 'RUC L. Aérea' },
     { name: 'Ruta' },
     { name: 'Tipo Ruta' },
@@ -80,25 +82,20 @@ export class DashboardComponent implements OnInit {
   ];
   pdfData: Blob | null = null;
   public usuario: Usuario;
-
   searchText: string = '';
-
   resizingColumn: string | null = null;
   initialX: number = 0;
   initialWidth: number = 0;
   filteredRowsCount: number = 0;
-
   fechaInicial: string | null = null;
   fechaFinal: string | null = null;
   tipoOpcion: string = 'Todos';
-
   cliente: string = '';
   opcionSeleccionada: string = '';
   tipoSeleccionado: string = '';
   formatoExportar: string = '';
   corporativo: boolean = false;
   documentoSeleccionado: string = ''
-
   constructor(
     private documentoService: DocumentoService, 
     private pdfUploadService: PdfUploadService, 
@@ -110,6 +107,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.checkIfAnyCheckboxSelected(); 
     this.fetchOptions(this.usuario.co_tip_maestro, this.usuario.co_maestro);
+    this.obtenerHotelesUnicos();
   }
 
   syncDates(): void {
@@ -145,10 +143,10 @@ export class DashboardComponent implements OnInit {
   toggleAllSelection(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
-      document.getElementById('btnPDF').hidden = false;
+      //document.getElementById('btnPDF').hidden = false;
       document.getElementById('btnExcel').hidden = false;
     } else {
-      document.getElementById('btnPDF').hidden = true;
+      //document.getElementById('btnPDF').hidden = true;
       document.getElementById('btnExcel').hidden = true;
     }
     console.log("Checked: ", checked);
@@ -313,7 +311,6 @@ export class DashboardComponent implements OnInit {
     if (selectedRows.length === 0) {
       return;
     }
-  
     const fechaInicial = lafechaInicial;
     const fechaFinal = lafechaFinal;
     const clienteSelect = elcliente;
@@ -332,52 +329,42 @@ export class DashboardComponent implements OnInit {
       'Tipo Ruta': this.getProperty(row, 'Tipo Ruta'),
       'Área': this.getProperty(row, 'co-area')
     }));
-  
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('data');
-  
     const tituloCelda: Partial<ExcelJS.Style> = {
       font: { size: 20, color: { argb: 'FF2A3E52' } },
       alignment: { horizontal: 'center', vertical: 'middle' },
       fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } }
     };
-  
     const subtituloCelda: Partial<ExcelJS.Style> = {
       font: { size: 12 },
       alignment: { horizontal: 'center', vertical: 'middle' },
       fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } }
     };
-
     const encabezadoCelda: Partial<ExcelJS.Style> = {
       font: { color: { argb: 'FFFFFFFF' } },
       fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF009999' } },
       alignment: { horizontal: 'center', vertical: 'middle' }
     };
-  
     worksheet.mergeCells('A1:L1');
     const titleCell = worksheet.getCell('A1');
     titleCell.value = 'Consulta de Boletos';
     titleCell.style = tituloCelda;
-  
     worksheet.mergeCells('A2:L2');
     const subtitleCell = worksheet.getCell('A2');
     subtitleCell.value = `Del ${fechaInicial} al ${fechaFinal} / Cliente: ${clienteSelect} / Tipo: ${tipo}`;
     subtitleCell.style = subtituloCelda;
-  
     const header = ['L. Aérea', 'Fec. Emisión', 'Tarifa', 'IGV', 'Impuestos', 'Total', 'Nombre', 'Cód.', 'RUC L. Aérea', 'Ruta', 'Tipo Ruta', 'Área'];
     const headerRow = worksheet.addRow(header);
     headerRow.eachCell(cell => {
       cell.style = encabezadoCelda;
     });
-  
     data.forEach(d => {
       worksheet.addRow(Object.values(d));
     });
-  
     worksheet.columns.forEach(column => {
       column.width = 20;
     });
-  
     workbook.xlsx.writeBuffer().then(buffer => {
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const url = window.URL.createObjectURL(blob);
@@ -388,7 +375,6 @@ export class DashboardComponent implements OnInit {
       a.click();
       document.body.removeChild(a);
     });
-  
     Swal.fire({
       toast: true,
       position: 'top',
@@ -489,12 +475,14 @@ export class DashboardComponent implements OnInit {
     const cliente = (document.getElementById('clienteSelect') as HTMLSelectElement)?.value;
     this.isLoading = true;
     this.isSearching = true;
-    this.documentoService.buscarConsultaDocumentos(fechaInicio, fechaFinal, cliente, tipo).subscribe(
+    this.documentoService.buscarConsultaDocumentosBoletos(fechaInicio, fechaFinal, cliente, tipo).subscribe(
       response => {
         this.rows = response;
+        this.filteredRowsCount = this.rows.length;
         this.noRecordsFound = this.rows.length === 0;
         this.checkIfAnyCheckboxSelected();
         this.updatePagedRows();
+        this.hotelesUnicos = Array.from(new Set(this.rows.map(row => this.getProperty(row, 'Hotel')))).sort();
         this.isLoading = false;
         this.isSearching = false;
         this.itemsPerPage = 20;
@@ -549,7 +537,7 @@ export class DashboardComponent implements OnInit {
       return 0;
     });
   }
-  
+
   updatePagedRows(): void {
     this.sortRows();
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -557,7 +545,7 @@ export class DashboardComponent implements OnInit {
     this.pagedRows = this.rows.slice(startIndex, endIndex);
     this.isLoading = false;
   }
-  
+
   changePageSize(event: any): void {
     let newSize: number;
     if (typeof event === 'string') {
@@ -571,7 +559,7 @@ export class DashboardComponent implements OnInit {
     this.itemsPerPage = newSize;
     this.updatePagedRows();
   }
-  
+
   goToFirstPage() {
     this.currentPage = 1;
     this.updatePagedRows();
@@ -588,6 +576,8 @@ export class DashboardComponent implements OnInit {
     this.isLoading = false;
     if (this.currentPage < this.getTotalPages()) {
       this.currentPage++;
+      console.log("Total páginas: ", this.getTotalPages());
+      console.log("Página actual: ", this.currentPage);
       this.updatePagedRows();
     }
   }
@@ -598,7 +588,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.rows.length / this.itemsPerPage);
+    return Math.ceil(this.filteredRowsCount / this.itemsPerPage);
   }
 
   calculatePageRange(): { startIndex: number, endIndex: number } {
@@ -640,7 +630,7 @@ export class DashboardComponent implements OnInit {
     return this.currentPage === this.getTotalPages();
   }
 
-  filterRows() {
+  /*filterRows() {
     document.getElementById('btnPDF').hidden = true;
     document.getElementById('btnExcel').hidden = true;
     if (this.searchText.trim() === '') {
@@ -651,19 +641,38 @@ export class DashboardComponent implements OnInit {
     }
     const searchTextLowerCase = this.searchText.trim().toLowerCase();
     this.pagedRows = this.rows.filter(row => {
-      const numero = this.getProperty(row, 'Nombre Apellidos').toLowerCase();
+      const numero = this.getProperty(row, 'Hotel').toLowerCase();
       return numero.includes(searchTextLowerCase);
     });
     this.filteredRowsCount = this.pagedRows.length;
     this.currentPage = 1;
     this.aplicarPaginacion();
-  }
+  }*/
+
+    filterRows() {
+      document.getElementById('btnPDF').hidden = true;
+      document.getElementById('btnExcel').hidden = true;
+    
+      // Aplica filtros de texto y select de hotel
+      const searchTextLowerCase = this.searchText.trim().toLowerCase();
+      const hotelSeleccionado = (document.getElementById('hotelSelect') as HTMLSelectElement).value;
+    
+      this.pagedRows = this.rows.filter(row => {
+        const coincideHotel = hotelSeleccionado ? this.getProperty(row, 'Hotel') === hotelSeleccionado : true;
+        const coincideTexto = searchTextLowerCase ? this.getProperty(row, 'Hotel').toLowerCase().includes(searchTextLowerCase) : true;
+        return coincideHotel && coincideTexto;
+      });
+      this.filteredRowsCount = this.pagedRows.length;
+      this.currentPage = 1;
+      this.aplicarPaginacion();
+      this.calcularSumatoriaTotal();
+    }
 
   aplicarPaginacion(): void {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.pagedRows = this.pagedRows.slice(start, end);
-    console.log(this.pagedRows);
+    console.log("Filas paginadas: ", this.filteredRowsCount);
   }
 
   onResizeStart(event: MouseEvent, column: string): void {
@@ -671,6 +680,123 @@ export class DashboardComponent implements OnInit {
     this.initialX = event.clientX;
     this.initialWidth = (event.target as HTMLElement).parentElement!.offsetWidth;
     event.preventDefault();
+  }
+
+  obtenerHotelesUnicos() {
+    const hotelesSet = new Set(this.rows.map(row => this.getProperty(row, 'Hotel')));
+    this.hotelesUnicos = Array.from(hotelesSet).sort();
+  }
+
+  filtrarPorHotelSeleccionado(event: Event) {
+    this.hotelSeleccionado = (event.target as HTMLSelectElement).value; // Mantiene el hotel seleccionado
+    this.isHotelSelected = this.hotelSeleccionado !== ''; // Se establece si hay un hotel seleccionado
+    
+    // Filtrar las filas según el hotel seleccionado
+    this.pagedRows = this.rows.filter(row => {
+      const isHotelMatch = this.hotelSeleccionado === '' || this.getProperty(row, 'Hotel') === this.hotelSeleccionado;
+      return isHotelMatch;
+    });
+
+    this.filteredRowsCount = this.pagedRows.length;
+    this.aplicarPaginacion();
+    this.calcularSumatoriaTotal();
+  }
+  
+  abrirFormularioPago() {
+    const anyChecked = this.pagedRows.some(row => row.selected);
+    if (!anyChecked) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No se ha seleccionado ningún documento',
+            text: 'Por favor, seleccione al menos un documento antes de continuar.',
+            confirmButtonText: 'Aceptar'
+        });
+        return;
+    }
+    Swal.fire({
+        title: 'PAGO DE DOCUMENTOS',
+        html: `
+            <div>
+                <p><strong>Hotel:</strong> ${this.hotelSeleccionado}</p>
+                <div class="form-group mt-3 d-flex align-items-center">
+                    <label for="numeroInput" class="mb-0 me-2 labelBlack" style="width:30%;">Número:</label>
+                    <input type="text" id="numeroInput" class="form-control form-control-sm w-60" style="width:70%;" placeholder="Ingrese el número" />
+                </div>
+                <div class="form-group mt-2 d-flex align-items-center">
+                    <label for="fechaInput" class="mb-0 me-2 labelBlack" style="width:30%;">Fecha:</label>
+                    <input type="date" id="fechaInput" class="ms-2 form-control form-control-sm w-60" style="width:70%;" />
+                </div>
+                <div class="form-group mt-2 d-flex align-items-center">
+                    <label for="fileInput" class="mb-0 me-2 labelBlack" style="width:30%;">Archivo:</label>
+                    <input type="file" id="fileInput" class="form-control form-control-sm w-60" style="width:70%;" accept=".pdf, .xls, .xlsx, .doc, .docx" />
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'CARGAR FACTURA',
+        cancelButtonText: 'CANCELAR',
+        preConfirm: () => {
+            const numero = (document.getElementById('numeroInput') as HTMLInputElement).value;
+            const fecha = (document.getElementById('fechaInput') as HTMLInputElement).value;
+            const archivo = (document.getElementById('fileInput') as HTMLInputElement).files?.[0];
+
+            if (!numero || !fecha || !archivo) {
+                Swal.showValidationMessage('Por favor complete todos los campos');
+                return false;
+            }
+            return { numero, fecha, archivo };
+        }
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            const { numero, fecha, archivo } = result.value;
+            console.log("Número: ", numero);
+            console.log("Fecha: ", fecha);
+            console.log("Archivo: ", archivo);
+            // Crear el FormData para enviar el archivo y los demás datos
+            const formData = new FormData();
+            formData.append('numero', numero);
+            formData.append('fecha', fecha);
+            formData.append('archivo', archivo);
+
+            this.pagedRows = this.rows.filter(row => {
+              const isHotelMatch = this.hotelSeleccionado === '' || this.getProperty(row, 'Hotel') === this.hotelSeleccionado;
+              return isHotelMatch;
+            });
+            // Añadir serie y número de pagedRows seleccionados
+            const documentosSeleccionados = this.pagedRows
+                .filter(row => row.selected)
+                .map(row => ({ serieSunat: row.serieSunat, numero: row.Número }));
+            formData.append('documentos', JSON.stringify(documentosSeleccionados));
+            console.log("DATOS: ",this.pagedRows);
+            // Realizar la petición POST al servidor
+            /*this.http.post('https://actoursappss.com.pe:8080/erequest', formData).subscribe(
+                response => {
+                    console.log('Respuesta del servidor:', response);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Factura cargada exitosamente',
+                        confirmButtonText: 'Aceptar'
+                    });
+                },
+                error => {
+                    console.error('Error al cargar la factura:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al cargar la factura',
+                        text: 'Hubo un problema al cargar la factura. Intente de nuevo.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            );*/
+        }
+        this.pagedRows = this.rows.filter(row => {
+          const isHotelMatch = this.hotelSeleccionado === '' || this.getProperty(row, 'Hotel') === this.hotelSeleccionado;
+          return isHotelMatch;
+        });
+    
+        this.filteredRowsCount = this.pagedRows.length;
+        this.aplicarPaginacion();
+    });
   }
 
   @HostListener('document:mousemove', ['$event'])

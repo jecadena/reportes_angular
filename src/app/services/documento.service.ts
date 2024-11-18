@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class DocumentoService {
 
-  private baseUrl = 'http://REMOTESERVER:9091';
+  private baseUrl = 'https://actoursapps.com.pe:8080/erequest';
+  private baseUrl1 = 'https://181.177.229.139:8080/erequest';
 
   constructor(private http: HttpClient) { }
 
@@ -38,6 +39,18 @@ export class DocumentoService {
       pdt_fe_del: fechaInicio,
       pdt_fe_al: fechaFinal,
       pc_fg_tipo_ruta: tipo
+    };
+    return this.http.get<any>(url, { params });
+  }
+
+  buscarConsultaDocumentosBoletos(fechaInicio: string, fechaFinal: string, cliente: string, tipo: string): Observable<any> {
+    const url = `${this.baseUrl1}/api/documentosHotelList`;
+    const params = {
+      pc_co_cia: '01',
+      pc_co_tip_maestro_cl_full: cliente,
+      pdt_fe_del: fechaInicio,
+      pdt_fe_al: fechaFinal,
+      pc_fg_estado: tipo
     };
     return this.http.get<any>(url, { params });
   }

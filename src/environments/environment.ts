@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  base_url: 'http://REMOTESERVER:9091/oauth/token',
+  base_url: 'https://actoursapps.com.pe:8080/erequest/oauth/token',
 };
 
 /*

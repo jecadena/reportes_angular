@@ -14,6 +14,7 @@ import { SidebarService } from '../../../services/sidebar.service';
   templateUrl: './carga-masiva.component.html',
   styleUrls: ['./carga-masiva.component.css']
 })
+
 export class CargaMasivaComponent {
   public selectedOption: any;
   public dynamicMenu: any[] = [];
@@ -60,9 +61,7 @@ export class CargaMasivaComponent {
   }
 
   fetchOptions(co_tip_maestro: string, co_maestro: string): void {
-    console.log("Tip Maestro: ", co_tip_maestro);
-    console.log("Maestro: ", co_maestro);
-    const url = `http://REMOTESERVER:9091/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
+    const url = `https://actoursapps.com.pe:8080/erequest/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
     this.http.get(url).subscribe((response: any) => {
       this.options = response.map((item: any) => ({
         value: item.co_tip_maestro + item.co_maestro,
@@ -110,38 +109,32 @@ export class CargaMasivaComponent {
       this.showWarningToast('La fecha inicial es obligatoria.');
       return false;
     }
-
     if (!this.fechaFinal) {
       this.isLoading = false;
       this.showWarningToast('La fecha final es obligatoria.');
       return false;
     }
-
     if(!this.selectedOption){
       this.isLoading = false;
       this.showWarningToast('Seleccione un cliente.');
       return false;
     }
-
     if(!this.tipoSeleccionado){
       this.isLoading = false;
       this.showWarningToast('Seleccione una de las opciones.');
       return false;
     }
-
     if(!this.documentoSeleccionado){
       this.isLoading = false;
       this.showWarningToast('Seleccione el formato a exportar');
       return false;
     }
-
     return true;
   }
 
   filterMenuByUrl(): void {
     const currentUrl = this.router.url.split('/').pop();
     this.filteredMenu = [];
-
     this.dynamicMenu.forEach(item => {
       const filteredSubmenu = item.submenu.filter(subItem => subItem.url === currentUrl);
       if (filteredSubmenu.length > 0) {
@@ -149,7 +142,6 @@ export class CargaMasivaComponent {
           ...item,
           submenu: filteredSubmenu
         });
-
         if (filteredSubmenu[0].co_reporte) {
           this.coReporte = filteredSubmenu[0].co_reporte;
         }
@@ -170,9 +162,7 @@ export class CargaMasivaComponent {
       const fg_formato = this.documentoSeleccionado.toUpperCase();
       const fg_corporativo = this.corporativo ? '1' : '0';
       const co_tip_maestro_cl = this.selectedOption;
-
-      const url = `http://REMOTESERVER:9091/api/cargamasiva/?co_cia=${co_cia}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&fe_del=${fe_del}&fe_al=${fe_al}&fg_tipo_ruta=${fg_tipo_ruta}&fg_formato=${fg_formato}&fg_corporativo=${fg_corporativo}&co_tip_maestro_cl=${co_tip_maestro_cl}`;
-
+      const url = `https://actoursapps.com.pe:8080/erequest/api/cargamasiva/?co_cia=${co_cia}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&fe_del=${fe_del}&fe_al=${fe_al}&fg_tipo_ruta=${fg_tipo_ruta}&fg_formato=${fg_formato}&fg_corporativo=${fg_corporativo}&co_tip_maestro_cl=${co_tip_maestro_cl}`;
       this.http.get(url, { observe: 'response', responseType: 'blob' }).subscribe((response: HttpResponse<Blob>) => {
         const contentDisposition = response.headers.get('content-disposition');
         let filename = contentDisposition ? contentDisposition.split('filename=')[1].trim() : 'archivo.' + this.documentoSeleccionado;
@@ -248,5 +238,4 @@ export class CargaMasivaComponent {
     { label: 'Cancelados', value: 'C' },
     { label: 'Todos', value: 'T' }
   ];
-
 }

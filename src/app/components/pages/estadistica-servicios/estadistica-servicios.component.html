@@ -1,0 +1,217 @@
+<div class="card" style="width: 70%;">
+    <div class="card-header">
+      <h5>Ventas por Línea Aérea</h5>
+    </div>
+    <div class="card-body">
+      <form>
+        <!-- Primera Fila -->
+        <div class="form-row align-items-left">
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="fechaInicial" class="mr-2 col-md-3 text-left">Del:</label>
+            <input type="date" class="form-control form-control-sm col-md-9" id="fechaInicial" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="fechaFinal" class="mr-2 col-md-3 text-left">Al:</label>
+            <input type="date" class="form-control form-control-sm col-md-9" id="fechaFinal" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="area" class="mr-2 col-md-3 text-left">Área:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="area" />
+          </div>
+        </div>
+
+        <!-- Segunda Fila -->
+        <div class="form-row align-items-left mt-2">
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="tipoPasajero" class="mr-2 col-md-3 text-left">Pasajero:</label>
+            <select class="form-control form-control-sm col-md-9" id="tipoPasajero">
+              <option>PX</option>
+              <option>PS</option>
+              <option>AL</option>
+            </select>
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="nombrePasajero" class="mr-2 col-md-3 text-left">Nombre:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="nombrePasajero" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="cliente" class="mr-2 col-md-3 text-left">Cliente:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="cliente" />
+          </div>
+        </div>
+
+        <!-- Tercer Fila -->
+        <div class="form-row align-items-left mt-2">
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="codigoLinea" class="mr-2 col-md-3 text-left">L.Aérea:</label>
+            <select class="form-control form-control-sm col-md-9" id="codigoLinea">
+              <option>LA</option>
+              <option>VA</option>
+              <option>OT</option>
+            </select>
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="nombreLinea" class="mr-2 col-md-3 text-left">Nombre:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="nombreLinea" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="counter" class="mr-2 col-md-3 text-left">Counter:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="counter" />
+          </div>
+        </div>
+
+        <!-- Cuarta Fila -->
+        <div class="form-row align-items-left mt-2">
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="nombreVendedor" class="mr-2 col-md-3 text-left">Vendedor</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="nombreVendedor" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="codigoUnidad" class="mr-2 col-md-3 text-left">Unidad:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="codigoUnidad" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="centroCosto" class="mr-2 col-md-3 text-left">C.Costo:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="centroCosto" />
+          </div>
+        </div>
+
+        <!-- Fila Adicional -->
+        <div class="form-row align-items-left mt-2">
+            <div class="col-md-8 d-flex align-items-left">
+              <label for="nombreVendedor" class="mr-1 col-md-1 text-left">GDS</label>
+              <input type="text" class="form-control form-control-sm col-md-9" id="nombreVendedor" />
+                <select class="form-control form-control-sm d-inline text-block col-md-2" id="selectAmbos">
+                    <option>GDS</option>
+                    <option></option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-left">
+              <label for="centroCosto" class="mr-2 col-md-3 text-left">Grupos:</label>
+              <input type="text" class="form-control form-control-sm col-md-9" id="centroCosto" />
+            </div>
+        </div>
+
+        <!-- Quinta Fila -->
+        <div class="form-row align-items-left mt-2 mb-2">
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="marcaCanje" class="mr-2 col-md-3 text-left">En canje:</label>
+            <input type="checkbox" id="marcaCanje" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="numeroFile" class="mr-2 col-md-3 text-left">File:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="numeroFile" />
+          </div>
+          <div class="col-md-4 d-flex align-items-left">
+            <label for="tarjetaCredito" class="mr-2 col-md-3 text-left">T. Crédito:</label>
+            <input type="text" class="form-control form-control-sm col-md-9" id="tarjetaCredito" />
+          </div>
+        </div>
+
+        <!-- Sexta Fila: BSP Radiobuttons -->
+        <div class="form-row align-items-left w-100">
+            <div class="col-md-9 border border-primary">
+                <div class="form-check form-check-inline col-md-3 mt-1">
+                    <input type="radio" class="form-check-input" name="bspOptions" id="bsp">
+                    <label class="form-check-label" for="bsp">BSP</label>
+                </div>
+                <div class="form-check form-check-inline col-md-4 mt-1">
+                    <input type="radio" class="form-check-input" name="bspOptions" id="noBsp">
+                    <label class="form-check-label" for="noBsp">No BSP</label>
+                </div>
+                <div class="form-check form-check-inline col-md-4 mt-1">
+                    <input type="radio" class="form-check-input" name="bspOptions" id="ambos">
+                    <label class="form-check-label" for="ambos">Ambos</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control form-control-sm d-inline ml-3 text-block" style="width:100%;" id="selectAmbos">
+                    <option>AMBOS</option>
+                    <option>BCP</option>
+                    <option>No BCP</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Séptima Fila: Resumen Radiobuttons -->
+        <div class="form-row align-items-left w-100">
+            <div class="col-md-9 bg-info text-white">
+                <div class="form-check form-check-inline col-md-2 mt-2">
+                    <input type="radio" class="form-check-input" name="resumenOptions" id="detalle">
+                    <label class="form-check-label" for="detalle">Detalle</label>
+                </div>
+                <div class="form-check form-check-inline col-md-3 mt-2">
+                    <input type="radio" class="form-check-input" name="resumenOptions" id="resGeneral">
+                    <label class="form-check-label" for="resGeneral">Resu. General</label>
+                </div>
+                <div class="form-check form-check-inline col-md-3 mt-2">
+                    <input type="radio" class="form-check-input" name="resumenOptions" id="resMeses">
+                    <label class="form-check-label" for="resMeses">Resu. Meses</label>
+                </div>
+                <div class="form-check form-check-inline col-md-3 mt-2">
+                    <input type="radio" class="form-check-input" name="resumenOptions" id="resAnual">
+                    <label class="form-check-label" for="resAnual">Resu. Anual</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control form-control-sm d-inline ml-3 text-block" style="width:100%;" id="selectAmbos">
+                    <option>AMBOS</option>
+                    <option>BCP</option>
+                    <option>No BCP</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Octava Fila: Comisión Radiobuttons -->
+        <div class="form-row align-items-left w-100">
+            <div class="col-md-9 bg-secondary text-white">
+                <div class="form-check form-check-inline col-md-3 mt-2">
+                    <input type="radio" class="form-check-input" name="comisionOptions" id="conComision">
+                    <label class="form-check-label" for="conComision">Con Comisión</label>
+                </div>
+                <div class="form-check form-check-inline col-md-4 mt-2">
+                    <input type="radio" class="form-check-input" name="comisionOptions" id="sinComision">
+                    <label class="form-check-label" for="sinComision">Sin Comisión</label>
+                </div>
+                <div class="form-check form-check-inline col-md-4 mt-2">
+                    <input type="radio" class="form-check-input" name="comisionOptions" id="ambosComision">
+                    <label class="form-check-label" for="ambosComision">Ambos</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control form-control-sm d-inline ml-3 text-block" style="width:100%;" id="selectAmbos">
+                    <option>AMBOS</option>
+                    <option>BCP</option>
+                    <option>No BCP</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Novena Fila -->
+        <div class="form-row align-items-left mt-2 w-100">
+            <div class="col-md-9 border-bottom border-secondary">
+                <div class="col-md-2 form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input ml-2" id="saldos" />
+                    <label class="form-check-label" for="saldos">Saldos</label>
+                </div>
+                <div class="col-md-3 form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input ml-2" id="consolidador" />
+                    <label class="form-check-label" for="consolidador">Consolidador</label>
+                </div>
+                <div class="col-md-3 form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input ml-2" id="filtroBoleto" />
+                    <label class="form-check-label" for="filtroBoleto">Filtro Boleto</label>
+                </div>
+                <div class="col-md-3 form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input ml-2" id="ruc" />
+                    <label class="form-check-label" for="ruc">R.U.C.</label>
+                </div>
+            </div>
+            <div class="col-md-3 text-right">
+                <button type="submit" class="btn btn-primary mr-2">Aceptar</button>
+                <button type="button" class="btn btn-secondary ml-2">Salir</button>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>

@@ -20,13 +20,10 @@ export class EstadisticaBoletosComponent {
   public filteredMenu: any[] = [];
   public usuario: Usuario;
   options: Array<{ value: string, text: string }> = [];
-
   isLoading: boolean = false;
   corporativo: boolean = false;
-
   fechaInicial: string | null = null;
   fechaFinal: string | null = null;
-
   tipoOpcion: string = '';
   cliente: string = '';
   opcionSeleccionada: string = '';
@@ -59,7 +56,7 @@ export class EstadisticaBoletosComponent {
   }
 
   fetchOptions(co_tip_maestro: string, co_maestro: string): void {
-    const url = `http://REMOTESERVER:9091/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
+    const url = `https://actoursapps.com.pe:8080/erequest/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
     this.http.get(url).subscribe((response: any) => {
       this.options = response.map((item: any) => ({
         value: item.co_tip_maestro + item.co_maestro,
@@ -107,38 +104,32 @@ export class EstadisticaBoletosComponent {
       this.showWarningToast('La fecha inicial es obligatoria.');
       return false;
     }
-
     if (!this.fechaFinal) {
       this.isLoading = false;
       this.showWarningToast('La fecha final es obligatoria.');
       return false;
     }
-
     if(!this.selectedOption){
       this.isLoading = false;
       this.showWarningToast('Seleccione un cliente.');
       return false;
     }
-
     if(!this.tipoSeleccionado){
       this.isLoading = false;
       this.showWarningToast('Seleccione una de las opciones.');
       return false;
     }
-
     if(!this.documentoSeleccionado){
       this.isLoading = false;
       this.showWarningToast('Seleccione el formato a exportar');
       return false;
     }
-
     return true;
   }
 
   filterMenuByUrl(): void {
     const currentUrl = this.router.url.split('/').pop();
     this.filteredMenu = [];
-
     this.dynamicMenu.forEach(item => {
       const filteredSubmenu = item.submenu.filter(subItem => subItem.url === currentUrl);
       if (filteredSubmenu.length > 0) {
@@ -146,7 +137,6 @@ export class EstadisticaBoletosComponent {
           ...item,
           submenu: filteredSubmenu
         });
-
         if (filteredSubmenu[0].co_reporte) {
           this.coReporte = filteredSubmenu[0].co_reporte;
         }
@@ -167,9 +157,7 @@ export class EstadisticaBoletosComponent {
       const fg_formato = this.documentoSeleccionado.toUpperCase();
       const fg_corporativo = this.corporativo ? '1' : '0';
       const co_tip_maestro_cl = this.selectedOption;
-
-      const url = `http://REMOTESERVER:9091/api/estadisticaboleto/?co_cia=${co_cia}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&fe_del=${fe_del}&fe_al=${fe_al}&fg_tipo_ruta=${fg_tipo_ruta}&fg_formato=${fg_formato}&fg_corporativo=${fg_corporativo}&co_tip_maestro_cl=${co_tip_maestro_cl}`;
-
+      const url = `https://actoursapps.com.pe:8080/erequest/api/estadisticaboleto/?co_cia=${co_cia}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&fe_del=${fe_del}&fe_al=${fe_al}&fg_tipo_ruta=${fg_tipo_ruta}&fg_formato=${fg_formato}&fg_corporativo=${fg_corporativo}&co_tip_maestro_cl=${co_tip_maestro_cl}`;
       this.http.get(url, { observe: 'response', responseType: 'blob' }).subscribe((response: HttpResponse<Blob>) => {
         const contentDisposition = response.headers.get('content-disposition');
         let filename = contentDisposition ? contentDisposition.split('filename=')[1].trim() : 'archivo.' + this.documentoSeleccionado;
@@ -193,6 +181,15 @@ export class EstadisticaBoletosComponent {
           link.download = filename;
           link.click();
           this.isLoading = false;
+          Swal.fire({
+            toast: true,
+            position: 'top',
+            icon: 'success',
+            title: filename + ' creado',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+          });
         }
       }, error => {
         this.isLoading = false;

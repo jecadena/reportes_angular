@@ -34,6 +34,10 @@
 label {
     font-size: 0.8rem;
 }
+labelBlack {
+  font-size: 0.8rem;
+  color:#000;
+}
 input{
     font-size:0.8rem;
     width: auto;
@@ -73,7 +77,6 @@ input{
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    border-radius: 5px;
     backdrop-filter: blur(5px);
   }
   
@@ -88,6 +91,7 @@ input{
 
   .textoPaginacion{
     color: #3498db;
+    margin-left:80px;
     font-weight: 700;
   }
 
@@ -103,34 +107,9 @@ input{
     cursor: pointer;
   }
 
-  .cliente-select {
-    flex-grow: 1; 
-  }
-  
-  .short-input {
-    width: 70px;
-  }
-  
-  .medium-input {
-    width: 120px;
-  }
-
-  .td-small{
-    width:6%;
-  }
-
-  .td-medium{
-    width: 18%;
-  }
-
-  .td-large{
-    width: 40%;
-  }
-
-  th {
+th {
     position: relative;
     white-space: nowrap;
-    border-right: 1px solid #fff;
   }
   
   th .resize-handle {
@@ -150,4 +129,3 @@ input{
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-  

@@ -62,7 +62,7 @@ export class CuentaCorrienteComponent implements OnInit {
   fetchOptions(co_tip_maestro: string, co_maestro: string): void {
     console.log("Tip Maestro: ", co_tip_maestro);
     console.log("Maestro: ", co_maestro);
-    const url = `http://REMOTESERVER:9091/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
+    const url = `https://actoursapps.com.pe:8080/erequest/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
     this.http.get(url).subscribe((response: any) => {
       this.options = response.map((item: any) => ({
         value: item.co_tip_maestro + item.co_maestro,
@@ -110,31 +110,26 @@ export class CuentaCorrienteComponent implements OnInit {
       this.showWarningToast('La fecha inicial es obligatoria.');
       return false;
     }
-
     if (!this.fechaFinal) {
       this.isLoading = false;
       this.showWarningToast('La fecha final es obligatoria.');
       return false;
     }
-
     if(!this.selectedOption){
       this.isLoading = false;
       this.showWarningToast('Seleccione un cliente.');
       return false;
     }
-
     if(!this.tipoSeleccionado){
       this.isLoading = false;
       this.showWarningToast('Seleccione una de las opciones.');
       return false;
     }
-
     if(!this.documentoSeleccionado){
       this.isLoading = false;
       this.showWarningToast('Seleccione el formato a exportar');
       return false;
     }
-
     return true;
   }
 
@@ -168,9 +163,7 @@ export class CuentaCorrienteComponent implements OnInit {
       const fg_formato = this.documentoSeleccionado.toUpperCase();
       const fg_corporativo = this.corporativo ? '1' : '0';
       const co_tip_maestro_cl = this.selectedOption;
-
-      const url = `http://REMOTESERVER:9091/api/cuentacorriente/?co_cia=${co_cia}&fe_del=${fe_del}&fe_al=${fe_al}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&co_tip_maestro_cl=${co_tip_maestro_cl}&fg_pago=${fg_pago}&fg_corporativo=${fg_corporativo}&fg_formato=${fg_formato}`;
-      
+      const url = `https://actoursapps.com.pe:8080/erequest/api/cuentacorriente/?co_cia=${co_cia}&fe_del=${fe_del}&fe_al=${fe_al}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&co_tip_maestro_cl=${co_tip_maestro_cl}&fg_pago=${fg_pago}&fg_corporativo=${fg_corporativo}&fg_formato=${fg_formato}`;
       this.http.get(url, { observe: 'response', responseType: 'blob' }).subscribe((response: HttpResponse<Blob>) => {
         const contentDisposition = response.headers.get('content-disposition');
         let filename = contentDisposition ? contentDisposition.split('filename=')[1].trim() : 'archivo.' + this.documentoSeleccionado;

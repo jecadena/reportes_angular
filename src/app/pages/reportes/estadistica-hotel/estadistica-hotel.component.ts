@@ -62,7 +62,7 @@ export class EstadisticaHotelComponent {
   fetchOptions(co_tip_maestro: string, co_maestro: string): void {
     console.log("Tip Maestro: ", co_tip_maestro);
     console.log("Maestro: ", co_maestro);
-    const url = `http://REMOTESERVER:9091/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
+    const url = `https://actoursapps.com.pe:8080/erequest/api/subclientes/01/${co_tip_maestro}/${co_maestro}`;
     this.http.get(url).subscribe((response: any) => {
       this.options = response.map((item: any) => ({
         value: item.co_tip_maestro + item.co_maestro,
@@ -171,7 +171,7 @@ export class EstadisticaHotelComponent {
       const fg_corporativo = this.corporativo ? '1' : '0';
       const co_tip_maestro_cl = this.selectedOption;
 
-      const url = `http://REMOTESERVER:9091/api/estadisticahotel/?co_cia=${co_cia}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&fe_del=${fe_del}&fe_al=${fe_al}&fg_formato=${fg_formato}`;
+      const url = `https://actoursapps.com.pe:8080/erequest/api/estadisticahotel/?co_cia=${co_cia}&co_tip_maestro_p=${co_tip_maestro}&co_maestro_p=${co_maestro}&co_reporte=${co_reporte}&fe_del=${fe_del}&fe_al=${fe_al}&fg_formato=${fg_formato}`;
 
       this.http.get(url, { observe: 'response', responseType: 'blob' }).subscribe((response: HttpResponse<Blob>) => {
         const contentDisposition = response.headers.get('content-disposition');

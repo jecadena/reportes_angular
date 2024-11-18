@@ -16,7 +16,8 @@ export class SidebarService {
       icono: 'mdi mdi-search-web',
       submenu: [
         { titulo: 'Consulta de Boletos', url: '/dashboard' },
-        { titulo: 'Consulta Documentos', url: 'documentos' }
+        { titulo: 'Consulta Documentos', url: 'documentos' },
+        { titulo: 'Consulta Doc. Boleto', url: '/dashboard/estadistica-emitidos' }
       ]
     },
     {
@@ -29,7 +30,7 @@ export class SidebarService {
   constructor(private http: HttpClient) { }
 
   getDynamicMenu(co_tip_maestro: string, co_maestro: string): Observable<any[]> {
-    const url = `http://REMOTESERVER:9091/api/reportes/01/${co_tip_maestro}/${co_maestro}`;
+    const url = `https://actoursapps.com.pe:8080/erequest/api/reportes/01/${co_tip_maestro}/${co_maestro}`;
     return this.http.get<any[]>(url).pipe(
       map((response: any[]) => {
         console.log('API response:', response);
