@@ -1,0 +1,40 @@
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div class="contenedor">
+  <div class="image-background"></div>
+  <div class="content-area">
+    <div class="wrapper">
+      <div class="cuerpo">
+        <img class="logo" src="assets/images/logotipo.png" alt="img login">
+        <h3 class="mb-2">Ingreso</h3>
+        <div class="inputbox">
+          <label>Usuario</label>
+          <input [(ngModel)]="usuario.de_email" type="text" class="form-control" name="username" id="username" required/>
+        </div>
+        <div class="inputbox">
+          <label>Password</label>
+          <input [(ngModel)]="usuario.de_password" type="password" class="form-control" name="password" id="password" required/>
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-primary btn-sm" (click)="login()">Aceptar</button>
+        </div>
+        <div class="text-left mt-2">
+          No tienes cuenta? <a routerLink="/signIn">Registrar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div *ngIf="loading" class="loading-overlay">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <p class="mt-1 text-white">Ingresando al sistema...</p>
+  </div>
+</div> -->
+
+
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->

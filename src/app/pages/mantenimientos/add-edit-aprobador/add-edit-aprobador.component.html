@@ -1,0 +1,94 @@
+<!-- <p-dialog
+  header="{{ modalType }} Aprobador"
+  [(visible)]="displayAddEditModal"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal()"
+>
+  <form [formGroup]="aprobadorForm" class="aprobador-form">
+    <div class="field">
+      <label class="block" for="de_foto">Foto</label>
+      <input type="text" pInputText id="de_foto" formControlName="de_foto" />
+      <small
+        class="p-error block"
+        *ngIf="
+        aprobadorForm.controls['de_foto'].invalid &&
+        aprobadorForm.controls['de_foto'].dirty
+        "
+        >Field is required</small
+      >
+    </div>
+    <div class="field">
+      <label class="block" for="co_aprobador">Código</label>
+      <p-inputNumber
+        id="co_aprobador"
+        formControlName="co_aprobador"
+        class="block"
+      ></p-inputNumber>
+      <small
+        class="p-error block"
+        *ngIf="
+        aprobadorForm.controls['co_aprobador'].invalid &&
+        aprobadorForm.controls['co_aprobador'].dirty
+        "
+        >Field is required</small
+      >
+    </div>
+    <div class="field">
+      <label class="block" for="de_aprobador">Descripción</label>
+      <p-inputNumber
+        id="de_aprobador"
+        formControlName="de_aprobador"
+        class="block"
+      ></p-inputNumber>
+      <small
+        class="p-error block"
+        *ngIf="
+        aprobadorForm.controls['de_aprobador'].invalid &&
+        aprobadorForm.controls['de_aprobador'].dirty
+        "
+        >Field is required</small
+      >
+    </div>
+    <div class="field">
+      <label class="block" for="de_email_aprobador">Email</label>
+      <input type="text" pInputText id="de_email_aprobador" formControlName="de_email_aprobador" />
+      <small
+        class="p-error block"
+        *ngIf="
+        aprobadorForm.controls['de_email_aprobador'].invalid &&
+        aprobadorForm.controls['de_email_aprobador'].dirty
+        "
+        >Field is required</small
+      >
+    </div>
+    <div class="field">
+      <label class="block" for="fg_vigente">Vigente</label>
+      <input type="text" pInputText id="fg_vigente" formControlName="fg_vigente" />
+      <small
+        class="p-error block"
+        *ngIf="
+        aprobadorForm.controls['fg_vigente'].invalid &&
+        aprobadorForm.controls['fg_vigente'].dirty
+        "
+        >Field is required</small
+      >
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button
+      (click)="closeModal()"
+      label="Cancel"
+      styleClass="p-button-text"
+    ></p-button>
+
+    <p-button
+      (click)="addEditAprobador()"
+      label="{{ modalType }}"
+      [disabled]="aprobadorForm.invalid"
+    ></p-button>
+  </ng-template>
+</p-dialog>
+ -->

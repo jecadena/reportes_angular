@@ -1,0 +1,17 @@
+label{
+    font-size:0.72em;
+    font-weight:600;
+}
+
+.form-check-label{
+    font-size:0.72em !important;
+    font-weight:600;
+}
+
+.form-control-sm{
+    font-size:0.72em !important;
+}
+
+input{
+    font-size:0.72 em !important;
+}

@@ -1,0 +1,127 @@
+.container{
+    margin-left: 0px !important;
+}
+.row{
+    font-size: 1rem;
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+}
+.table{
+    font-size:1rem;
+}
+.form-check-label{
+    font-size: 1rem !important;
+}
+.table{
+    background-color: #fff;
+}
+.card{
+    padding: 0px 20px !important;
+}
+.col{
+    padding: 0rem 0.5rem !important;
+}
+.table thead th, .table th{
+    font-size: 0.7rem;
+    color: black !important;
+    font-weight: 500;
+}
+.table thead td, .table td{
+    font-size: 0.7rem;
+    color: black !important;
+    font-weight: 500;
+}
+label {
+    font-size: 0.8rem;
+}
+input{
+    font-size:0.8rem;
+    width: auto;
+}
+.form-check-label{
+    font-size: 0.8rem !important;
+}
+.swal2-custom-height {
+    height: 80vh !important;
+}
+.pagination{
+    margin:0 auto;
+    width: 100%;
+    justify-content: center;
+}
+.pagination-button{
+    border: 0px !important;
+    cursor: pointer;
+    margin: 0px 20px;
+    background-color: transparent;
+}
+.selectorPaginado{
+    border: 1px solid #ebebeb;
+    cursor: pointer;
+    margin: 0px 10px;
+    padding: 5px;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 125px;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+  
+  .spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  .textoPaginacion{
+    color: #3498db;
+    margin-left:80px;
+    font-weight: 700;
+  }
+
+  .peque{
+    color: #3498db;
+  }
+
+  .fa-arrow-down{
+    cursor: pointer;
+  }
+
+  .fa-arrow-up{
+    cursor: pointer;
+  }
+
+th {
+    position: relative;
+    white-space: nowrap;
+  }
+  
+  th .resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: col-resize;
+  }
+
+  .table thead th, .table th{
+    border-right: 1px solid #fff !important;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

@@ -1,0 +1,79 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Mi Perfil de Usuario</h4>
+                <h6 class="card-subtitle">Ajustes</h6>
+                <form class="form p-t-20"
+                      [formGroup]="perfilForm">
+                    <div class="form-group">
+                        <label for="exampleInputuname">Nombres</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="ti-user"></i></div>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="exampleInputuname" 
+                                   placeholder="Nombres"
+                                   formControlName = "de_nom_solicitante">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputApellidoPaterno">Apellido Paterno</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="ti-user"></i></div>
+                            <input type="text" 
+                                   class="form-control"
+                                   id="exampleInputEmail1" 
+                                   placeholder="Apellido Paterno"
+                                   formControlName = "de_pat_solicitante">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputApellidoMaterno">E-mail</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="ti-email"></i></div>
+                            <input type="email"
+                                   class="form-control"
+                                   id="exampleInputEmail1" 
+                                   placeholder="E-mail"
+                                   formControlName = "de_email">
+                        </div>
+                    </div>
+                    <button type="submit" (click)="subirFoto()"
+                           class="btn btn-success btn-block waves-effect waves-light m-r-10"
+                           >
+                        <i class="fa fa-save" ></i>
+                           Guardar Cambios
+                    </button>
+                    <!--button type="submit" class="btn btn-inverse waves-effect waves-light">Cancel</button-->
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Avatar</h4>
+                <h6 class="card-subtitle">Imagen del Usuario</h6>
+                <div class="text-center">
+                    <img *ngIf="!img_temp" class="img-avatar" src="{{http_url_img}}{{usuario.de_img}}">
+                    <img *ngIf="img_temp" class="img-avatar" [src]="img_temp">
+                </div>
+                <br>
+                <br>
+                <input type="file"
+                        class="btn btn-success btn-block waves-effect waves-light m-r-10"
+                        (change) = "cambiarImagen($event)">
+                <br>
+                <br>
+                <!--button type="button"  
+                        class="btn btn-success btn-block waves-effect waves-light m-r-10"
+                        [disabled]="!imagenSubir"
+                        (click)="subirImagen()">
+                    <i class="fa fa-save" ></i>
+                    Cambiar Imagen
+                </-button-->               
+            </div>
+        </div>
+    </div>            
+</div>

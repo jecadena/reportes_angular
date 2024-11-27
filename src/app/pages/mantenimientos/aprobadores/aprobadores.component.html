@@ -1,0 +1,226 @@
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmación" acceptLabel="Si" rejectLabel="No"
+  icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<!--p-panel header="Administración de Aprobadores" [style]="{ width: '100%', margin: '0 auto' }"-->
+
+<div class="card">
+  <!-- <div style="margin-bottom: 20px">
+      <p-menubar [model]="items"></p-menubar>
+    </div> -->
+  <p-toolbar class="toolbar">
+    <ng-template pTemplate="left">
+      <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success mr-2"
+        (click)="showSaveDialog(false)" pTooltip="Nuevo"></button>
+      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2"
+        (click)="showSaveDialog(true)" pTooltip="Editar"></button>
+      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteAprobador()"
+        pTooltip="Eliminar"></button>
+    </ng-template>
+    <ng-template pTemplate="right">
+
+      <div class="flex align-items-left justify-content-between">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <!-- <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" -->
+            placeholder="Buscar..." style="height: 1rem" />
+        </span>
+      </div>
+
+      <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
+      <div class="flex">
+        <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="mr-2" pTooltip="CSV"
+          tooltipPosition="bottom"></button>
+        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+          class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+        <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-danger mr-2"
+          pTooltip="PDF" tooltipPosition="bottom"></button>
+        <button type="button" pButton pRipple icon="pi pi-filter" (click)="dt.exportCSV({selectionOnly:true})"
+          class="p-button-warning ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"></button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt [value]="aprobadores" [columns]="cols" [responsive]="true" selectionMode="single" [scrollable]="true"
+    scrollHeight="340px" styleClass="p-datatable-sm" [(selection)]="selectedAprobadores"
+    [exportHeader]="'customExportHeader'" [rowHover]="true" dataKey="co_aprobador">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+
+          <div class="row">
+            {{ col.header }}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+              ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order">
+            </p-sortIcon>
+          </div>
+
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-aprobador let-columns="columns">
+      <tr [pSelectableRow]="aprobador">
+        <td *ngFor="let col of columns">
+          <div class="col-field">
+            {{ aprobador[col.field] }}
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- <app-add-edit-aprobador
+      [displayAddEditModal]="displayAddEditModal"
+      [selectedAprobadores]="selectedAprobadores"
+      (clickClose)="hideAddModal($event)"
+      (clickAddEdit)="saveorUpdateAprobadortList($event)"
+    ></app-add-edit-aprobador> -->
+</div>
+
+<!--/p-panel-->
+
+<div class="card">
+  <table class="table">
+    <thead>
+        <tr>
+            <th scope="col"><input type="checkbox" (change)="selectAll($event)"></th>
+            <th scope="col">Id</th>
+            <th scope="col">Fecha I.</th>
+            <th scope="col">Fecha F.</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Monto</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Serie</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- <tr *ngFor="let aprobador of aprobadores">
+            <td><input type="checkbox" [(ngModel)]="aprobador.selected" (change)="selectRow($event, aprobador)"></td>
+            <td>{{ aprobador.id }}</td>
+            <td>{{ aprobador.fechaInicio }}</td>
+            <td>{{ aprobador.fechaFin }}</td>
+            <td>{{ aprobador.cliente }}</td>
+            <td>{{ aprobador.monto }}</td>
+            <td>{{ aprobador.documento }}</td>
+            <td>{{ aprobador.serie }}</td>
+        </tr> -->
+        <tr>
+            <td><input type="checkbox" (change)="selectRow($event, aprobador)"></td>
+            <td>1</td>
+            <td>2024-06-01</td>
+            <td>2024-06-15</td>
+            <td>Empresa 1</td>
+            <td>$1000</td>
+            <td>Factura</td>
+            <td>A001</td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" (change)="selectRow($event, aprobador)"></td>
+            <td>2</td>
+            <td>2024-06-05</td>
+            <td>2024-06-20</td>
+            <td>Empresa 2</td>
+            <td>$1500</td>
+            <td>Recibo</td>
+            <td>B002</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<p-dialog id="exampleModal" [(visible)]="displaySaveDialog" [responsive]="true" header="Detalles del aprobador"
+  [modal]="true">
+  <ng-template pTemplate="content">
+    <ng-container *ngIf="aprobador">
+       <!-- <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image">
+    <div class="field">
+      <label for="co_aprobador">Código </label>
+      <input type="text" pInputText id="co_aprobador" [(ngModel)]="aprobador.co_aprobador" required autofocus  /><br>
+      <small class="p-error" *ngIf="submitted && !aprobador.co_aprobador">Se requiere código.</small>
+    </div> -->
+    <div class="field">
+      <label for="co_aprobador">Código</label>
+      <input type="text" 
+             pInputText 
+             id="co_aprobador" 
+             [(ngModel)]="aprobador.co_aprobador" 
+             required 
+             autofocus 
+             [class.placeholder-error]="submitted && !aprobador.co_aprobador"
+             [placeholder]="submitted && !aprobador.co_aprobador ? 'Se requiere código.' : ''"
+             (focus)="clearPlaceholder('co_aprobador')"
+             (blur)="setPlaceholder('co_aprobador')" /><br>
+    </div>
+    
+    <div class="field">
+      <label for="de_aprobador">Descripción</label>
+      <input type="text" 
+             pInputText 
+             id="de_aprobador" 
+             [(ngModel)]="aprobador.de_aprobador" 
+             required 
+             autofocus 
+             [class.placeholder-error]="submitted && !aprobador.de_aprobador"
+             [placeholder]="submitted && !aprobador.de_aprobador ? 'Se requiere Descripción.' : ''"
+             (focus)="clearPlaceholder('de_aprobador')"
+             (blur)="setPlaceholder('de_aprobador')" /><br>
+    </div>
+    
+    <div class="field">
+      <label for="de_email_aprobador">Email</label>
+      <input type="email" 
+             pInputText 
+             id="de_email_aprobador" 
+             [(ngModel)]="aprobador.de_email_aprobador" 
+             required 
+             email
+             autofocus 
+             [class.placeholder-error]="submitted && !aprobador.de_email_aprobador"
+             [placeholder]="submitted && !aprobador.de_email_aprobador ? 'Se requiere Email.' : ''"
+             (focus)="clearPlaceholder('de_email_aprobador')"
+             (blur)="setPlaceholder('de_email_aprobador')"
+             #emailInput="ngModel" /><br>
+      <small class="p-error" *ngIf="submitted && emailInput.errors?.email">Formato de email inválido.</small>
+    </div>
+    
+    <div class="field">
+      <label for="fg_vigente">Vigente</label>
+      <input type="text" 
+             pInputText 
+             id="fg_vigente" 
+             [(ngModel)]="aprobador.fg_vigente" 
+             required 
+             autofocus 
+             [class.placeholder-error]="submitted && !aprobador.fg_vigente"
+             [placeholder]="submitted && !aprobador.fg_vigente ? 'Indique la vigencia.' : ''"
+             (focus)="clearPlaceholder('fg_vigente')"
+             (blur)="setPlaceholder('fg_vigente')" /><br>
+    </div>    
+    
+    <!-- <div class="field">
+      <label for="de_aprobador">Descripción </label>
+      <input type="text" pInputText id="de_aprobador" [(ngModel)]="aprobador.de_aprobador" required autofocus /><br>
+      <small class="p-error" *ngIf="submitted && !aprobador.de_aprobador">Se requiere Descripción.</small>
+    </div>
+    <div class="field">
+      <label for="de_email_aprobador">Email </label>
+      <input type="email" pInputText id="de_email_aprobador" [(ngModel)]="aprobador.de_email_aprobador" required
+        autofocus /><br>
+      <small class="p-error" *ngIf="submitted && !aprobador.de_email_aprobador">Se requiere Email.</small>
+    </div>
+    <div class="field">
+      <label for="fg_vigente">Vigente </label>
+      <input type="text" pInputText id="fg_vigente" [(ngModel)]="aprobador.fg_vigente" required autofocus /><br>
+      <small class="p-error" *ngIf="submitted && !aprobador.fg_vigente">Indique la vigencia.</small>
+    </div> -->
+    </ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button style="height: 2rem;width: 7rem;" pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+      (click)="hideDialog()"></button>
+    <button style="height: 2rem;width: 7rem;" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+      (click)="save()"></button>
+  </ng-template>
+</p-dialog>
+
+

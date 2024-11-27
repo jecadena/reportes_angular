@@ -1,0 +1,156 @@
+<!-- ============================================================== -->
+<!--        Topbar header - style you can find in pages.scss        -->
+<!-- ============================================================== -->
+<header class="topbar">
+    <nav class="navbar top-navbar navbar-expand-md navbar-light">
+        <!-- ============================================================== -->
+        <!--                              Logo                              -->
+        <!-- ============================================================== -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">
+                <!-- Logo icon -->
+                <img *ngIf="!isLogoChanged" src="./assets/images/logoach.png" alt="homepage" class="light-logo" />
+                <img *ngIf="isLogoChanged" src="./assets/images/logo-dark-icon.png" alt="homepage" class="light-logo" />
+            </a>
+        </div>
+        <!-- ============================================================== -->
+        <!--                            End Logo                            -->
+        <!-- ============================================================== -->
+        <div class="navbar-collapse">
+            <!-- ============================================================== -->
+            <!--                      Toggle and nav items                      -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)" (click)="toggleMenu()">
+                        <i class="ti-menu"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebartoggler hidden-sm-down waves-effect waves-dark" href="javascript:void(0)" (click)="toggleLogo()">
+                        <i class="ti-menu"></i>
+                    </a>
+                </li>
+                <li class="nav-item hidden-sm-down" *ngIf="!isMenuCollapsed"></li>
+            </ul>
+            <!-- ============================================================== -->
+            <!--                     User profile and search                    -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav my-lg-0">
+                <!-- ============================================================== -->
+                <!--                             Search                             -->
+                <!-- ============================================================== -->
+                <!-- <li class="nav-item hidden-xs-down search-box" (click)="$event.stopPropagation()">
+                    <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)" (click)="toggleSearch($event)">
+                      <i class="ti-search"></i>
+                    </a>
+                    <form class="app-search" [ngClass]="{'d-none': !isSearchVisible}" (click)="$event.stopPropagation()">
+                      <input type="text" class="form-control" placeholder="Search & enter">
+                      <a class="srh-btn" (click)="toggleSearch($event)">
+                        <i class="ti-close"></i>
+                      </a>
+                    </form>
+                  </li>    -->                              
+                <!-- ============================================================== -->
+                <!--                             Comment                            -->
+                <!-- ============================================================== -->
+                <li class="nav-item dropdown">
+                    <!-- <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-message"></i>
+                        <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                    </a> -->
+                    <div class="dropdown-menu dropdown-menu-right mailbox animated fadeIn fast">
+                        <ul>
+                            <li>
+                                <div class="drop-title">Notificaciones</div>
+                            </li>
+                            <li>
+                                <a class="nav-link text-center" href="javascript:void(0);"> <strong>Ver todas </strong> <i class="fa fa-angle-right"></i> </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- ============================================================== -->
+                <!--                           End Comment                          -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!--                            Messages                            -->
+                <!-- ============================================================== -->
+                <li class="nav-item dropdown">
+                    <!--<a class="nav-link dropdown-toggle waves-effect waves-dark" href="" id="2" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-email"></i>
+                         <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                    </a> -->
+                    <div class="dropdown-menu mailbox dropdown-menu-right animated fadeIn fast" aria-labelledby="2">
+                        <ul>
+                            <li>
+                                <div class="drop-title">Tienes nuevos mensajes</div>
+                            </li>
+                            <li>
+                                <div class="message-center">
+                                    <a href="#">
+                                        <div class="user-img"> <img src="./assets/images/users/1.jpg" alt="user"
+                                                class="img-circle"> <span
+                                                class="profile-status online pull-right"></span> </div>
+                                        <div class="mail-contnet">
+                                            <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span>
+                                            <span class="time">9:30 AM</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </li>
+                            <li>
+                                <a class="nav-link text-center" href="javascript:void(0);"> <strong>Ver todos los mensajes</strong> <i class="fa fa-angle-right"></i> </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- ============================================================== -->
+                <!--                          End Messages                          -->
+                <!-- ============================================================== -->
+
+                <!-- ============================================================== -->
+                <!--                            Lenguage                            -->
+                <!-- ============================================================== -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"> <i class="flag-icon flag-icon-pe"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right animated fadeIn fast"> 
+                        <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-us"></i> Inglés</a> 
+                    </div>
+                </li>
+                <!-- ============================================================== -->
+                <!--                            Profile                             -->
+                <!-- ============================================================== -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"><img class="redondo" width="30" src="./assets/images/users/{{ usuario.de_img }}" alt="{{ usuario.de_nom_solicitante }} {{ usuario.de_pat_solicitante }}"> BIENVENIDA, 
+                        <strong>{{ usuario.de_nom_solicitante }} {{ usuario.de_pat_solicitante }}</strong>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right animated fadeIn fast">
+                        <ul class="dropdown-user">
+                            <li>
+                                <div class="dw-user-box">
+                                    <div class="u-text">
+                                        <h4>{{usuario.de_nom_solicitante}} {{usuario.de_pat_solicitante}}</h4>
+                                        <p class="text-muted">{{usuario.de_email}}</p>
+                                        <a routerLink="./perfil" class="btn btn-rounded btn-danger btn-sm">Mi Perfil</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a (click)="logout()" type="submit"><i class="fa fa-power-off"></i>
+                                    Cerrar sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<!-- ============================================================== -->
+<!--                        End Topbar header                       -->
+<!-- ============================================================== -->

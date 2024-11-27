@@ -1,0 +1,7 @@
+{
+  "/oauth": {
+    "target": "http://REMOTESERVER:9091",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

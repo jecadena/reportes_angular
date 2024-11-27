@@ -1,0 +1,33 @@
+<aside class="left-sidebar">
+    <div class="scroll-sidebar">
+        <nav class="sidebar-nav">
+            <ul id="sidebarnav">
+                <li class="nav-small-cap active text-white">MENU</li>
+                <li class="nav-devider"></li>
+                <li *ngFor="let item of menuItems">
+                    <a class="has-arrow waves-effect waves-dark"
+                       href="#"
+                       aria-expanded="true"
+                       [class.active]="isMenuOpen(item)">
+                        <i [class]="item.icono"></i>
+                        <span class="hide-menu">
+                            {{ item.titulo }}
+                            <span *ngIf="item.submenu && item.submenu.length > 0" class="label label-rouded label-themecolor pull-right">
+                                {{ item.submenu.length }}
+                            </span>
+                        </span>
+                    </a>
+
+                    <ul aria-expanded="isMenuOpen(item)" class="collapse show">
+                        <li *ngFor="let subMenuItem of item.submenu">
+                            <a [routerLink]="subMenuItem.url"
+                               routerLinkActive="active"
+                               [routerLinkActiveOptions]="{ exact: true }"> {{ subMenuItem.titulo }} </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-devider"></li>
+            </ul>
+        </nav>
+    </div>
+</aside>
