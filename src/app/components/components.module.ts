@@ -2,7 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'
 
+<<<<<<< HEAD
 import { ChartsModule } from 'ng2-charts';
+=======
+//import { ChartsModule } from 'ng2-charts';
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
 
 import { IncrementadorComponent } from './incrementador/incrementador.component';
 import { DonaComponent } from './dona/dona.component';
@@ -35,7 +39,11 @@ import { ReporteGestionComponent } from './pages/reporte-gestion/reporte-gestion
   imports: [
     CommonModule,
     FormsModule,
+<<<<<<< HEAD
     ChartsModule
+=======
+    //ChartsModule
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
   ]
 })
 export class ComponentsModule { }

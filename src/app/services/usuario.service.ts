@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { Observable, throwError } from 'rxjs';
+=======
+import { Observable, throwError, EMPTY } from 'rxjs';
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Usuario } from '../pages/usuarios/usuario';
 import { environment } from '../../environments/environment';
@@ -29,6 +33,7 @@ export class UsuarioService {
   }
 
 
+<<<<<<< HEAD
   private isNoAutorizado(e): boolean{
     if(e.status == 401){
       this.router.navigate(['/login']);
@@ -42,6 +47,26 @@ export class UsuarioService {
      }
 
      return false;
+=======
+  private isNoAutorizado(e): boolean {
+    if (e.status === 401) {
+      Swal.fire('Credenciales inválidas', 'Intente nuevamente!', 'warning');
+      this.router.navigate(['/login']); // Redirigir al login
+      return true; // Indica que el error fue manejado
+    }
+  
+    if (e.status === 403) {
+      Swal.fire(
+        'Acceso denegado',
+        'Hola no tienes acceso a esta plataforma!', // Puedes personalizar el mensaje aquí
+        'warning'
+      );
+      this.router.navigate(['/']); // Redirigir a la página principal
+      return true; // Indica que el error fue manejado
+    }
+  
+    return false; // Indica que el error no fue manejado
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
   }
 
   public get usuario(): Usuario {
@@ -65,6 +90,10 @@ public get token(): string {
 }
 
 login(usuario: Usuario): Observable<any> {
+<<<<<<< HEAD
+=======
+  //const urlEndpoint = 'http://localhost:8080/oauth/token';
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
   const urlEndpoint = 'https://actoursapps.com.pe:8080/erequest/oauth/token';
   const credenciales = btoa('angularapp' + ':' + '12345');
   const httpHeaders = new HttpHeaders({
@@ -78,6 +107,7 @@ login(usuario: Usuario): Observable<any> {
   params.set('password', usuario.de_password);
   console.log(params.toString());
 
+<<<<<<< HEAD
   return this.http.post<any>(urlEndpoint, params.toString(), { headers: httpHeaders }).pipe(
     catchError(error => {
       if (error.status === 0) {
@@ -102,10 +132,29 @@ login(usuario: Usuario): Observable<any> {
         });
       }
       return throwError(() => error);
+=======
+  params.set('co_plataforma', '100');
+  //console.log(params.toString());
+  return this.http.post<any>(urlEndpoint, params.toString(), { headers: httpHeaders }).pipe(
+    catchError((e) => {
+      // Utiliza isNoAutorizado para manejar los errores 401 y 403
+      if (this.isNoAutorizado(e)) {
+        return EMPTY; // Detener la propagación del error
+      }
+
+      // Otros errores
+      const errorMessage = e.error?.message || 'Error desconocido. Contacte al administrador.';
+      Swal.fire('Error', errorMessage, 'error');
+      return throwError(() => new Error(errorMessage));
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
     })
   );
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
   guardarUsuario(accessToken: string): void {
     let payload = this.obtenerDatosToken(accessToken);
     this._usuario = new Usuario();
