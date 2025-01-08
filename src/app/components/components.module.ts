@@ -2,11 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'
 
-<<<<<<< HEAD
-import { ChartsModule } from 'ng2-charts';
-=======
 //import { ChartsModule } from 'ng2-charts';
->>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
 
 import { IncrementadorComponent } from './incrementador/incrementador.component';
 import { DonaComponent } from './dona/dona.component';
@@ -17,7 +13,6 @@ import { EstadisticaServiciosComponent } from './pages/estadistica-servicios/est
 import { FacturacionComponent } from './pages/facturacion/facturacion.component';
 import { RepoorteCargaComponent } from './pages/repoorte-carga/repoorte-carga.component';
 import { ReporteGestionComponent } from './pages/reporte-gestion/reporte-gestion.component';
-
 
 
 @NgModule({
@@ -39,11 +34,7 @@ import { ReporteGestionComponent } from './pages/reporte-gestion/reporte-gestion
   imports: [
     CommonModule,
     FormsModule,
-<<<<<<< HEAD
-    ChartsModule
-=======
-    //ChartsModule
->>>>>>> a97120ffbfe32daaf50fcca799116113ed1f84a9
+    // ChartsModule  // Si necesitas usar ChartsModule, descomenta esta línea
   ]
 })
 export class ComponentsModule { }
